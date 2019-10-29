@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzq.dao.DetailDao">
+
+	<resultMap type="Detail" id="detailMap">
+		<id column="id" property="id"/>
+		<association property="type"
+			column="id"
+			select="com.zzq.dao.TypeDao.getInfoById">
+		</association>
+	</resultMap>
+	
+	<select id="getInfoById" parameterType="int" resultMap="detailMap">
+		select * from goodsDetail where id=#{id}
+	</select>
+	
+	<select id="getCount" parameterType="map" resultType="int">
+		select count(1) from goodsDetail
+		<where>
+			<if test="sortId!=null">
+				sortId=#{sortId}
+			</if>
+		</where>
+	</select>
+	<select id="getInfoByPage" parameterType="map" resultMap="detailMap">
+		select * from goodsDetail 
+		<where>
+			<if test="sortId!=null">
+				sortId=#{sortId}
+			</if>
+		</where>
+		limit #{currentPageNo},#{pageSize}
+	</select>
+	
+	<update id="update" parameterType="map">
+		update goodsDetail set remaining=remaining-#{num} where id=#{id}
+	</update>
+</mapper> 
